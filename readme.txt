@@ -90,6 +90,11 @@ Swiftype already has a Wordpress plugin, but it's simply sending of all your pos
 
 == Changelog ==
 
+= 0.3 - 2015/09/07 =
+
+* Fixing error reporting - ignoring "name lookup timed out" error which sometime occurs (server connection issues?)
+* Search engine error reports in wp-admin now only show to editors and admins
+
 = 0.2 - 2015/04/23 =
 
 * Adding robots.txt rule for Swiftbot crawler

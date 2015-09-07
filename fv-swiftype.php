@@ -3,7 +3,7 @@
 Plugin Name: FV Swiftype
 Description: Use Swiftype engine for your search.
 Author: Foliovision
-Version: 0.2
+Version: 0.3
 Author URI: http://www.foliovision.com
 */
 
@@ -15,7 +15,7 @@ define( 'SWIFTYPE_VERSION', 'fv0.1.1');
 
 class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
-	var $version = '0.2';  
+	var $version = '0.3';  
   var $fv_swiftype_response;
   var $aOptions;
   
@@ -96,7 +96,7 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
     </div>';  
     }    
     
-    if( get_option('fv_swiftype_last_error') ) {
+    if( current_user_can('edit_posts') && get_option('fv_swiftype_last_error') ) {
       echo '<div class="error">
        <p>Looks like there is a problem with your Swiftype configuration (<a href="#" onclick="jQuery(this).parents(\'div\').find(\'pre\').toggle(); return false">show details</a> <a href="'.site_url('wp-admin/options-general.php?page=fv_swiftype&dismiss').'">dismiss</a>).</p>
        <pre style="display: none">'.get_option('fv_swiftype_last_error').'</pre>
@@ -215,7 +215,10 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
   
   function error( $msg ) {
-    update_option( 'fv_swiftype_last_error', $msg );
+    if( stripos($msg,'name lookup timed out') === false ) {
+      update_option( 'fv_swiftype_last_error', $msg );
+    }
+    
     if( isset($this->aOptions['debug']) && $this->aOptions['debug'] ) {
       echo "<!--FVSwiftype ".str_replace( '-->', '-- >', $msg )."-->\n";
     }
