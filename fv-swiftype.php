@@ -217,6 +217,10 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   function error( $msg ) {
     if( stripos($msg,'name lookup timed out') === false ) {
       update_option( 'fv_swiftype_last_error', $msg );
+    } else {
+      $aErrors = get_option( 'fv_swiftype_last_error_name_lookup_timed_out' ) ? get_option( 'fv_swiftype_last_error_name_lookup_timed_out' ) : array();
+      $aErrors[date('r')] = $msg;
+      update_option( 'fv_swiftype_last_error_name_lookup_timed_out', $aErrors );
     }
     
     if( isset($this->aOptions['debug']) && $this->aOptions['debug'] ) {
