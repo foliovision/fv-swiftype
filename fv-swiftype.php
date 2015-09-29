@@ -108,7 +108,7 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
   
   function check_query( $query ) {
-    if( !is_admin() &&  isset($query->query['s']) ) {
+    if( !is_admin() &&  !empty($query->query['s']) ) {
       
       $iPerPage = $query->get( 'posts_per_page');
       if( !$iPerPage ) {
