@@ -3,7 +3,7 @@
 Plugin Name: FV Swiftype
 Description: Use Swiftype engine for your search.
 Author: Foliovision
-Version: 0.3
+Version: 0.3.1
 Author URI: http://www.foliovision.com
 */
 
