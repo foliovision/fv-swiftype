@@ -3,7 +3,7 @@
 Plugin Name: FV Swiftype
 Description: Use Swiftype engine for your search.
 Author: Foliovision
-Version: 0.3.1
+Version: 0.3.2
 Author URI: http://www.foliovision.com
 */
 
@@ -133,7 +133,7 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
                 'per_page' => $iPerPage,
                 'page' => isset($query->query['paged']) ? $query->query['paged'] : 1,
                 'fetch_fields' => array(
-                    "page" => array( "title", "url", "published_at", "highlight", "sections", "type" )
+                    "page" => array( "title", "url", "published_at", "highlight", "sections", "type", "image" )
                     )
                 );
       
@@ -788,6 +788,10 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
           $newPost->post_content = $this->get_excerpt( $aPost['highlight']['sections'] ). apply_filters( 'excerpt_more', ' ' . '[&hellip;]' );
         } else {
           $newPost->post_content = '';
+        }
+        
+        if( !empty($aPost['image']) ) {
+          $newPost->post_content .= "<div style='position: relative; left: -200px; top: -100px; width: 190px;'><img src='".$aPost['image']."' /></div>";
         }
         
         if( $objTaxonomy = get_taxonomy($aPost['type']) ) {
