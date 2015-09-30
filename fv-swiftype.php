@@ -3,7 +3,7 @@
 Plugin Name: FV Swiftype
 Description: Use Swiftype engine for your search.
 Author: Foliovision
-Version: 0.3.2
+Version: 0.3.2.1
 Author URI: http://www.foliovision.com
 */
 
@@ -108,7 +108,7 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
   
   function check_query( $query ) {
-    if( !is_admin() &&  !empty($query->query['s']) && !bbp_is_search_results() ) {
+    if( !is_admin() &&  !empty($query->query['s']) && ( !function_exists('bbp_is_search_results') || !bbp_is_search_results() ) ) {
 
       $iPerPage = $query->get( 'posts_per_page');
       if( !$iPerPage ) {
@@ -397,6 +397,20 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
     if( isset($aImage[0]) ) : ?>
     <meta property='st:image' content='<?php echo $aImage[0]; ?>' />
     <?php endif;
+    
+    global $post;
+    
+    if( is_singular() && isset($post->ID) ) {
+      $aCats = wp_get_post_categories( $post->ID );
+      if( count($aCats) > 0 ) {
+        foreach( $aCats AS $cat_id ) {
+          $objCat = get_category($cat_id);
+          ?>
+          <meta class="swiftype" name="category" data-type="string" content="<?php echo esc_attr($objCat->name); ?>" />
+          <?php
+        }
+      }
+    }
   }
   
   
