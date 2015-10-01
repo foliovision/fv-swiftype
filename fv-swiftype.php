@@ -406,7 +406,7 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
         foreach( $aCats AS $cat_id ) {
           $objCat = get_category($cat_id);
           ?>
-          <meta class="swiftype" name="category" data-type="string" content="<?php echo esc_attr($objCat->name); ?>" />
+          <meta class="swiftype" name="category" data-type="enum" content="<?php echo esc_attr($objCat->name); ?>" />
           <?php
         }
       }
