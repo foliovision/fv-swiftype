@@ -3,7 +3,7 @@
 Plugin Name: FV Swiftype
 Description: Use Swiftype engine for your search.
 Author: Foliovision
-Version: 0.3.2.1
+Version: 0.3.2.2
 Author URI: http://www.foliovision.com
 */
 
@@ -804,7 +804,7 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
           $newPost->post_content = '';
         }
         
-        if( !empty($aPost['image']) ) {
+        if( !empty($aPost['image']) && apply_filters('fv_swiftype_image_quick_fix',false) ) {
           $newPost->post_content .= "<div style='position: relative; left: -200px; top: -100px; width: 190px;'><img src='".$aPost['image']."' /></div>";
         }
         
