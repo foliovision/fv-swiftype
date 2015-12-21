@@ -3,7 +3,7 @@
 Plugin Name: FV Swiftype
 Description: Use Swiftype engine for your search.
 Author: Foliovision
-Version: 0.3.2.2
+Version: 0.3.2.3
 Author URI: http://www.foliovision.com
 */
 
@@ -47,6 +47,8 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
     add_action( 'admin_notices', array( $this, 'admin_notices' ) );
     
     add_filter( 'robots_txt', array( $this, 'robots_txt' ) );
+    
+    add_filter( 'post_thumbnail_html', array( $this, 'post_thumbnail_html'), 999, 4 );
   }
   
   
@@ -736,6 +738,16 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
   
   
+  function post_thumbnail_html( $html, $post_id, $post_thumbnail_id, $size ) {
+    global $post;
+    if( empty($post->fv_swiftype_featured) ) return $html;
+    
+    return "<img src='$post->fv_swiftype_featured' class='attachment-$size wp-post-image' alt='".esc_attr($post->post_title)."' />";
+  }
+  
+  
+  
+  
   function query_insert_results( $posts ) {
     $aArgs = func_get_args();
     $wp_query = $aArgs[1];
@@ -806,6 +818,10 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
         
         if( !empty($aPost['image']) && apply_filters('fv_swiftype_image_quick_fix',false) ) {
           $newPost->post_content .= "<div style='position: relative; left: -200px; top: -100px; width: 190px;'><img src='".$aPost['image']."' /></div>";
+        }
+        
+        if( !empty($aPost['image']) ) {
+          $newPost->fv_swiftype_featured = $aPost['image'];
         }
         
         if( $objTaxonomy = get_taxonomy($aPost['type']) ) {
