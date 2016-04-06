@@ -90,6 +90,14 @@ Swiftype already has a Wordpress plugin, but it's simply sending of all your pos
 
 == Changelog ==
 
+= 0.3.3 - 2016/04/06 =
+
+* Added Swiftype meta tag for post categories named as "tag" as "category" is already take and its of "enum" type
+* bbPress compatibility fix
+* Featured image support for external items - should show the image from the "image" field from Swiftype if your theme doesn't use has_post_thumbnail()
+* Fix for external entries URLs - sometimes trailing slash was added where unwanted
+
+
 = 0.3 - 2015/09/07 =
 
 * Fixing error reporting - ignoring "name lookup timed out" error which sometime occurs (server connection issues?)

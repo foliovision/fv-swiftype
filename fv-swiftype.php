@@ -3,7 +3,7 @@
 Plugin Name: FV Swiftype
 Description: Use Swiftype engine for your search.
 Author: Foliovision
-Version: 0.3
+Version: 0.3.3
 Author URI: http://www.foliovision.com
 */
 
@@ -15,7 +15,7 @@ define( 'SWIFTYPE_VERSION', 'fv0.1.1');
 
 class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
-	var $version = '0.3';  
+	var $version = '0.3.3';  
   var $fv_swiftype_response;
   var $aOptions;
   
@@ -32,7 +32,7 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
     if( !$this->is_test() || isset($_GET['fv_swiftype']) ) {
       add_action( 'pre_get_posts', array( $this, 'check_query' ), 11 );
       add_filter( 'the_posts', array( $this, 'query_insert_results' ), 10, 2 );
-      add_filter( 'post_link', array( $this, 'post_link' ), 10, 2 );
+      add_filter( 'post_link', array( $this, 'post_link' ), 999999, 2 );
       add_action( 'wp_footer', array( $this, 'debug_sql' ) );
     }
         
@@ -47,6 +47,8 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
     add_action( 'admin_notices', array( $this, 'admin_notices' ) );
     
     add_filter( 'robots_txt', array( $this, 'robots_txt' ) );
+    
+    add_filter( 'post_thumbnail_html', array( $this, 'post_thumbnail_html'), 999, 4 );
   }
   
   
@@ -108,8 +110,8 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
   
   function check_query( $query ) {
-    if( !is_admin() &&  !empty($query->query['s']) ) {
-      
+    if( !is_admin() &&  !empty($query->query['s']) && ( !function_exists('bbp_is_search_results') || !bbp_is_search_results() ) ) {
+
       $iPerPage = $query->get( 'posts_per_page');
       if( !$iPerPage ) {
         $iPerPage = get_option('posts_per_page');
@@ -133,7 +135,7 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
                 'per_page' => $iPerPage,
                 'page' => isset($query->query['paged']) ? $query->query['paged'] : 1,
                 'fetch_fields' => array(
-                    "page" => array( "title", "url", "published_at", "highlight", "sections", "type" )
+                    "page" => array( "title", "url", "published_at", "highlight", "sections", "type", "image" )
                     )
                 );
       
@@ -397,6 +399,20 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
     if( isset($aImage[0]) ) : ?>
     <meta property='st:image' content='<?php echo $aImage[0]; ?>' />
     <?php endif;
+    
+    global $post;
+    
+    if( is_singular() && isset($post->ID) ) {
+      $aCats = wp_get_post_categories( $post->ID );
+      if( count($aCats) > 0 ) {
+        foreach( $aCats AS $cat_id ) {
+          $objCat = get_category($cat_id);
+          ?>
+          <meta class="swiftype" name="tag" data-type="string" content="<?php echo esc_attr($objCat->name); ?>" />
+          <?php
+        }
+      }
+    }
   }
   
   
@@ -722,6 +738,16 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
   
   
+  function post_thumbnail_html( $html, $post_id, $post_thumbnail_id, $size ) {
+    global $post;
+    if( empty($post->fv_swiftype_featured) ) return $html;
+    
+    return "<img src='$post->fv_swiftype_featured' class='attachment-$size wp-post-image' alt='".esc_attr($post->post_title)."' />";
+  }
+  
+  
+  
+  
   function query_insert_results( $posts ) {
     $aArgs = func_get_args();
     $wp_query = $aArgs[1];
@@ -788,6 +814,10 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
           $newPost->post_content = $this->get_excerpt( $aPost['highlight']['sections'] ). apply_filters( 'excerpt_more', ' ' . '[&hellip;]' );
         } else {
           $newPost->post_content = '';
+        }
+        
+        if( !empty($aPost['image']) ) {
+          $newPost->fv_swiftype_featured = $aPost['image'];
         }
         
         if( $objTaxonomy = get_taxonomy($aPost['type']) ) {
