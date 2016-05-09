@@ -2,7 +2,7 @@
 Contributors: FolioVision
 Tags: search, swiftype
 Requires at least: 4.0
-Tested up to: 4.1.2
+Tested up to: 4.5.1
 Stable tag: trunk
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -89,6 +89,10 @@ Swiftype already has a Wordpress plugin, but it's simply sending of all your pos
 1. FV Switftype settings
 
 == Changelog ==
+
+= 0.3.4 - 2016/05/09 =
+
+* Fixing error reporting - ignoring "Operation timed out" error which sometime occurs (server connection issues?)
 
 = 0.3.3 - 2016/04/06 =
 

@@ -3,7 +3,7 @@
 Plugin Name: FV Swiftype
 Description: Use Swiftype engine for your search.
 Author: Foliovision
-Version: 0.3.3
+Version: 0.3.4
 Author URI: http://www.foliovision.com
 */
 
@@ -15,7 +15,7 @@ define( 'SWIFTYPE_VERSION', 'fv0.1.1');
 
 class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
-	var $version = '0.3.3';  
+	var $version = '0.3.4';  
   var $fv_swiftype_response;
   var $aOptions;
   
@@ -217,12 +217,18 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
   
   function error( $msg ) {
-    if( stripos($msg,'name lookup timed out') === false ) {
-      update_option( 'fv_swiftype_last_error', $msg );
-    } else {
+    if( stripos($msg,'Operation timed out') !== false ) {
+      $aErrors = get_option( 'fv_swiftype_last_error_operation_timed_out' ) ? get_option( 'fv_swiftype_last_error_operation_timed_out' ) : array();
+      $aErrors[date('r')] = $msg;
+      update_option( 'fv_swiftype_last_error_operation_timed_out', $aErrors );
+      
+    } else if( stripos($msg,'name lookup timed out') !== false ) {
       $aErrors = get_option( 'fv_swiftype_last_error_name_lookup_timed_out' ) ? get_option( 'fv_swiftype_last_error_name_lookup_timed_out' ) : array();
       $aErrors[date('r')] = $msg;
       update_option( 'fv_swiftype_last_error_name_lookup_timed_out', $aErrors );
+      
+    } else {
+      update_option( 'fv_swiftype_last_error', $msg );
     }
     
     if( isset($this->aOptions['debug']) && $this->aOptions['debug'] ) {
