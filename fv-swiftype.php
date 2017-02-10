@@ -3,7 +3,7 @@
 Plugin Name: FV Swiftype
 Description: Use Swiftype engine for your search.
 Author: Foliovision
-Version: 0.3.4
+Version: 0.3.5
 Author URI: http://www.foliovision.com
 */
 
@@ -15,7 +15,7 @@ define( 'SWIFTYPE_VERSION', 'fv0.1.1');
 
 class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
-	var $version = '0.3.4';  
+	var $version = '0.3.5';  
   var $fv_swiftype_response;
   var $aOptions;
   
@@ -748,7 +748,23 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
     global $post;
     if( empty($post->fv_swiftype_featured) ) return $html;
     
-    return "<img src='$post->fv_swiftype_featured' class='attachment-$size wp-post-image' alt='".esc_attr($post->post_title)."' />";
+    $width = get_option('thumbnail_size_w');
+    $height = get_option('thumbnail_size_h');
+    
+    global $_wp_additional_image_sizes;
+    if( isset($_wp_additional_image_sizes[$size]) ) {
+      $width = $_wp_additional_image_sizes[$size]['width'];
+      $height = $_wp_additional_image_sizes[$size]['height']; 
+    }
+    
+    $width = intval($width);
+    $height = intval($height);
+    
+    if( $width > 0 && $height > 0 ) {
+      $style = ' style="max-width: '.$width.'px; max-height: '.$height.'px"';
+    }
+    
+    return "<img src='$post->fv_swiftype_featured'".$style." class='attachment-$size wp-post-image' alt='".esc_attr($post->post_title)."' />";
   }
   
   
@@ -834,7 +850,12 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
         
       }
       
-      $newPost->post_title = preg_replace( '~\s?\|.*$~', '', str_replace( 'em>', 'strong>', ( isset($aPost['highlight']['title']) ) ? $aPost['highlight']['title'] : $aPost['title'] ) );
+      $newPost->post_title = preg_replace( '~\s?\|.*$~', '', str_replace( 'em>', 'strong>', ( isset($aPost['highlight']['title']) ) ? $aPost['highlight']['title'] : $aPost['title'] ) );            
+      if( empty($newPost->post_title) ) {
+        $aURL = parse_url($aPost['url']);
+        if( isset($aURL['path']) ) $newPost->post_title .= $aURL['path'];
+        if( isset($aURL['query']) ) $newPost->post_title .= '?'.$aURL['query'];
+      }
       
       $posts[] = $newPost;
     }

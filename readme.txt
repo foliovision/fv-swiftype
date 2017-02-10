@@ -90,6 +90,11 @@ Swiftype already has a Wordpress plugin, but it's simply sending of all your pos
 
 == Changelog ==
 
+= 0.3.5 - 2017/02/10 =
+
+* Fix for featured image size for non-wp_post results
+* Adding at least some title for results with no title at all
+
 = 0.3.4 - 2016/05/09 =
 
 * Fixing error reporting - ignoring "Operation timed out" error which sometime occurs (server connection issues?)
