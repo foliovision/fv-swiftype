@@ -218,14 +218,19 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
   function error( $msg ) {
     if( stripos($msg,'Operation timed out') !== false ) {
-      $aErrors = get_option( 'fv_swiftype_last_error_operation_timed_out' ) ? get_option( 'fv_swiftype_last_error_operation_timed_out' ) : array();
+      $aErrors = get_option( 'fv_swiftype_last_error_operation_timed_out', array() );
       $aErrors[date('r')] = $msg;
       update_option( 'fv_swiftype_last_error_operation_timed_out', $aErrors );
       
     } else if( stripos($msg,'name lookup timed out') !== false ) {
-      $aErrors = get_option( 'fv_swiftype_last_error_name_lookup_timed_out' ) ? get_option( 'fv_swiftype_last_error_name_lookup_timed_out' ) : array();
+      $aErrors = get_option( 'fv_swiftype_last_error_name_lookup_timed_out', array() );
       $aErrors[date('r')] = $msg;
       update_option( 'fv_swiftype_last_error_name_lookup_timed_out', $aErrors );
+      
+    } else if( stripos($msg,'Resolving timed out') !== false ) {
+      $aErrors = get_option( 'fv_swiftype_last_error_resolving_timed_out', array() );
+      $aErrors[date('r')] = $msg;
+      update_option( 'fv_swiftype_last_error_resolving_timed_out', $aErrors );
       
     } else {
       update_option( 'fv_swiftype_last_error', $msg );
