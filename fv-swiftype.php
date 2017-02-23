@@ -233,9 +233,9 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
       update_option( 'fv_swiftype_last_error_resolving_timed_out', $aErrors );
       
     } else if( stripos($msg,'Could not resolve host') !== false ) {
-      $aErrors = get_option( 'fv_swiftype_last_error_couldn_not_resolve_host', array() );
+      $aErrors = get_option( 'fv_swiftype_last_error_could_not_resolve_host', array() );
       $aErrors[date('r')] = $msg;
-      update_option( 'fv_swiftype_last_error_couldn_not_resolve_host', $aErrors );
+      update_option( 'fv_swiftype_last_error_could_not_resolve_host', $aErrors );
       
     } else {
       update_option( 'fv_swiftype_last_error', $msg );
