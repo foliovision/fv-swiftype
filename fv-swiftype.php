@@ -656,6 +656,15 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
               <?php endif; ?>
               <tr>
                 <td>
+                  <label for="disable_image_style">
+                    <input type="checkbox" name="disable_image_style" id="disable_image_style" value="1" <?php if( isset($options['disable_image_style']) && $options['disable_image_style'] ) echo 'checked="checked"'; ?> />
+                    Disable image max-sizes in inline style
+                  </label>
+                  <p class="description">My theme is using responsive image sizes. Do not include <u>max-width</u> and <u>max-height</u> as inline style for images.</p>
+                </td>
+              </tr>
+              <tr>
+                <td>
                   <label for="test_mode">
                     <input type="checkbox" name="test_mode" id="test_mode" value="1" <?php if( isset($options['test_mode']) && $options['test_mode'] ) echo 'checked="checked"'; ?> />
                     Test Mode.
@@ -709,6 +718,7 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
       if( isset($_POST['api_key']) ) {
         $options['api_key'] = stripslashes( $_POST['api_key'] );
       }
+      $options['disable_image_style'] = ( isset($_POST['disable_image_style']) && $_POST['disable_image_style'] ) ? true : false;
       $options['test_mode'] = ( isset($_POST['test_mode']) && $_POST['test_mode'] ) ? true : false;
       $options['debug'] = ( isset($_POST['debug']) && $_POST['debug'] ) ? true : false;
       if( isset($_POST['engine_id']) ) {
@@ -758,20 +768,23 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
     global $post;
     if( empty($post->fv_swiftype_featured) ) return $html;
     
-    $width = get_option('thumbnail_size_w');
-    $height = get_option('thumbnail_size_h');
-    
-    global $_wp_additional_image_sizes;
-    if( isset($_wp_additional_image_sizes[$size]) ) {
-      $width = $_wp_additional_image_sizes[$size]['width'];
-      $height = $_wp_additional_image_sizes[$size]['height']; 
-    }
-    
-    $width = intval($width);
-    $height = intval($height);
-    
-    if( $width > 0 && $height > 0 ) {
-      $style = ' style="max-width: '.$width.'px; max-height: '.$height.'px"';
+    $style = '';
+    if( !isset( $this->aOptions['disable_image_style'] ) || !$this->aOptions['disable_image_style'] ) {
+      $width = get_option( $size.'_size_w');
+      $height = get_option( $size.'_size_h');
+      
+      global $_wp_additional_image_sizes;
+      if( isset($_wp_additional_image_sizes[$size]) ) {
+        $width = $_wp_additional_image_sizes[$size]['width'];
+        $height = $_wp_additional_image_sizes[$size]['height']; 
+      }
+      
+      $width = intval($width);
+      $height = intval($height);
+
+      if( $width > 0 && $height > 0 ) {
+        $style = ' style="max-width: '.$width.'px; max-height: '.$height.'px"';
+      }
     }
     
     return "<img src='$post->fv_swiftype_featured'".$style." class='attachment-$size wp-post-image' alt='".esc_attr($post->post_title)."' />";
