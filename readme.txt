@@ -90,6 +90,10 @@ Swiftype already has a Wordpress plugin, but it's simply sending of all your pos
 
 == Changelog ==
 
+= 0.3.6 - 2017/12/21 =
+
+* Reducing Swiftype API connection timeout from 10 to 5 seconds
+
 = 0.3.5 - 2017/02/23 =
 
 * Fix for featured image size for non-wp_post results

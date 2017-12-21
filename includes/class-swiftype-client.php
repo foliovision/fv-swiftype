@@ -249,7 +249,7 @@ public function delete_documents( $engine_id, $document_type_id, $document_ids )
 
 		$args = array(
 			'method' => '',
-			'timeout' => 10,
+			'timeout' => 5,
 			'redirection' => 5,
 			'httpversion' => '1.0',
 			'blocking' => true,
