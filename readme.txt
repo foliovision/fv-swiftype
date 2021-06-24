@@ -90,6 +90,10 @@ Swiftype already has a Wordpress plugin, but it's simply sending of all your pos
 
 == Changelog ==
 
+= 0.3.7 - 2021/06/24 =
+
+* Do not log full error trace
+
 = 0.3.6 - 2017/12/21 =
 
 * Reducing Swiftype API connection timeout from 10 to 5 seconds
