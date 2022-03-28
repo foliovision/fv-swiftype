@@ -232,15 +232,10 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
         $found = true;
 
         $aErrors = get_option( $store_key, array() );
+        $aErrors[date('r')] = $msg;
 
-        if( preg_match( "~'message' => '(.*)'~", $msg, $error_message ) ) {
-          $aErrors[date('r')] = $msg;
-        } else {
-          $aErrors[date('r')] = $error_message;
-        }
-
+        // Only keep last 100 errors
         $aErrors = array_slice( $aErrors, -100, 100, true );
-
         update_option( $store_key, $aErrors, false );
       }
     }
