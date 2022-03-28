@@ -217,27 +217,35 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
   
   function error( $msg ) {
-    if( stripos($msg,'Operation timed out') !== false ) {
-      $aErrors = get_option( 'fv_swiftype_last_error_operation_timed_out', array() );
-      $aErrors[date('r')] = $msg;
-      update_option( 'fv_swiftype_last_error_operation_timed_out', $aErrors );
-      
-    } else if( stripos($msg,'name lookup timed out') !== false ) {
-      $aErrors = get_option( 'fv_swiftype_last_error_name_lookup_timed_out', array() );
-      $aErrors[date('r')] = $msg;
-      update_option( 'fv_swiftype_last_error_name_lookup_timed_out', $aErrors );
-      
-    } else if( stripos($msg,'Resolving timed out') !== false ) {
-      $aErrors = get_option( 'fv_swiftype_last_error_resolving_timed_out', array() );
-      $aErrors[date('r')] = $msg;
-      update_option( 'fv_swiftype_last_error_resolving_timed_out', $aErrors );
-      
-    } else if( stripos($msg,'Could not resolve host') !== false ) {
-      $aErrors = get_option( 'fv_swiftype_last_error_could_not_resolve_host', array() );
-      $aErrors[date('r')] = $msg;
-      update_option( 'fv_swiftype_last_error_could_not_resolve_host', $aErrors );
-      
-    } else {
+    $errors = array(
+      'Connection timed out after' => 'fv_swiftype_last_error_connection_timed_out',
+      'Operation timed out' => 'fv_swiftype_last_error_operation_timed_out',
+      'name lookup timed out' => 'fv_swiftype_last_error_name_lookup_timed_out',
+      'Resolving timed out' => 'fv_swiftype_last_error_resolving_timed_out',
+      'Could not resolve host' => 'fv_swiftype_last_error_could_not_resolve_host'
+    );
+
+    $found = false;
+
+    foreach( $errors AS $match => $store_key ) {
+      if( stripos( $msg, $match ) !== false ) {
+        $found = true;
+
+        $aErrors = get_option( $store_key, array() );
+
+        if( preg_match( "~'message' => '(.*)'~", $msg, $error_message ) ) {
+          $aErrors[date('r')] = $msg;
+        } else {
+          $aErrors[date('r')] = $error_message;
+        }
+
+        $aErrors = array_slice( $aErrors, -100, 100, true );
+
+        update_option( $store_key, $aErrors, false );
+      }
+    }
+
+    if( !$found ) {
       update_option( 'fv_swiftype_last_error', $msg );
     }
     
