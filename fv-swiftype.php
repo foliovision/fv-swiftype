@@ -3,7 +3,7 @@
 Plugin Name: FV Swiftype
 Description: Use Swiftype engine for your search.
 Author: Foliovision
-Version: 0.3.7
+Version: 0.3.8
 Author URI: http://www.foliovision.com
 */
 
@@ -15,7 +15,7 @@ define( 'SWIFTYPE_VERSION', 'fv0.1.2');
 
 class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
-	var $version = '0.3.7';  
+	var $version = '0.3.8';  
   var $fv_swiftype_response;
   var $aOptions;
   
