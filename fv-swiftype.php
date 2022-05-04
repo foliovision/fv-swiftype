@@ -140,7 +140,13 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
                 );
       
       if( $this->aOptions['exclude'] ) {
-        $aArgs['filters'] = array( 'page' => array( 'type' => array_values($this->get_search_types( array('searchable'=>true) )) ) );
+        $post_types =  array_values($this->get_search_types( array('searchable'=>true) ) );
+
+        if( in_array('non-wordpress', $post_types ) ) {
+          $post_types[] = '';
+        }
+
+        $aArgs['filters'] = array( 'page' => array( 'type' => $post_types ) );
       }
       
       try {      
@@ -287,7 +293,7 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
     extract($aArgs);
     
     $aPostTypes = get_post_types( array( 'exclude_from_search' => false ) );
-    $aPostTypes['other'] = '';
+    $aPostTypes['other'] = 'non-wordpress';
     $aTaxonomies = get_taxonomies( array( 'public' => true ) );
     $aTaxonomies['archive'] = 'archive';
     
@@ -638,7 +644,10 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
                           if( isset($sType) ) {
                             $document_types = array_keys($aGroups);
                             $sChecked = ( isset($options['exclude'][$document_types[$k]][$sType]) ) ? " checked='checked'" : "";
-                            $sLabel = ($sType) ? $sType : 'non-Wordpress items';
+                            $sLabel = $sType;
+                            if( $sType == 'non-wordpress' ) {
+                              $sLabel = 'non-Wordpress items';
+                            }
                             echo "<input id='type-$count' type='checkbox' value='1' name='exclude[".$document_types[$k]."][$sType]' $sChecked /> <label for='type-$count'>$sLabel</label>";
                           }
                           echo "</td>\n";
