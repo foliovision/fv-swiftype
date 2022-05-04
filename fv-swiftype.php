@@ -496,9 +496,9 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
       <form id="fv_swiftype_form" method="post" action="">
         
         <div class="postbox">
-          <h3>
+          <h2>
           <?php _e('Search Engine Settings') ?>
-          </h3>                
+          </h2>                
           <?php wp_nonce_field('fv_swiftype');
           $sShowSave = false;
           ?>        
@@ -605,9 +605,9 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
           </div>
         </div>
         <div class="postbox">
-          <h3>
+          <h2>
           <?php _e('Tweaks') ?>
-          </h3>
+          </h2>
           <div class="inside">
             <table>
               <?php if( $this->have_engine() ) : ?>
