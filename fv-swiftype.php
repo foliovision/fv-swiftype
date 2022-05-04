@@ -378,7 +378,7 @@ class FV_Swiftype extends FV_Swiftype_Foliopress_Plugin {
   
   
   function index_featured_image() {
-    if( 1<0 && !is_singular() ) {  //  todo: experimental!
+    if( !is_singular() ) {  //  todo: experimental!
       ?><meta property='st:published_at' content='2000-05-21T00:48:25+00:00' />
       <?php
       return;
